@@ -65,11 +65,21 @@ def save_character(character, filename):
     """
     Saves character to text file in specific format
     Returns: True if successful, False if error occurred
+    (No try/except allowed)
     """
     if filename == "":
         return False
 
-    # Write data to file
+    import os
+
+    # Extract directory path
+    directory = os.path.dirname(filename)
+
+    # If a directory is specified AND it does not exist → fail
+    if directory != "" and not os.path.exists(directory):
+        return False
+
+    # Now it's safe to write the file
     file = open(filename, "w")
     file.write(f"Character Name: {character['name']}\n")
     file.write(f"Class: {character['class']}\n")
@@ -81,6 +91,7 @@ def save_character(character, filename):
     file.close()
 
     return True
+
 
 
 def load_character(filename):
