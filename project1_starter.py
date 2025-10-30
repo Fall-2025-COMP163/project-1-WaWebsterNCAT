@@ -6,17 +6,21 @@ Date: [10/29/2025]
 AI Usage: ChatGPT (GPT-5) helped with function implementation logic, formatting, and documentation.
 """
 
+# Function to create a new character
 def create_character(name, character_class):
     """
     Creates a new character dictionary with calculated stats
     Returns: dictionary with keys: name, class, level, strength, magic, health, gold
     """
-    level = 1
+    level = 1  # All new characters start at level 1
+    
+    # Calculate base stats based on class and level
     strength, magic, health = calculate_stats(character_class, level)
     
     # Base gold for all characters
     gold = 100
 
+    # Store all character data in a dictionary
     character = {
         "name": name,
         "class": character_class,
@@ -30,6 +34,7 @@ def create_character(name, character_class):
     return character
 
 
+# Function to calculate stats based on class and level
 def calculate_stats(character_class, level):
     """
     Calculates base stats based on class and level
@@ -61,6 +66,7 @@ def calculate_stats(character_class, level):
     return (strength, magic, health)
 
 
+# Function to save a character to a text file
 def save_character(character, filename):
     """
     Saves character to text file in specific format
@@ -68,18 +74,18 @@ def save_character(character, filename):
     (No try/except allowed)
     """
     if filename == "":
-        return False
+        return False  # Empty filename is invalid
 
     import os
 
-    # Extract directory path
+    # Extract directory path from filename
     directory = os.path.dirname(filename)
 
     # If a directory is specified AND it does not exist → fail
     if directory != "" and not os.path.exists(directory):
         return False
 
-    # Now it's safe to write the file
+    # Open file in write mode and save character data line by line
     file = open(filename, "w")
     file.write(f"Character Name: {character['name']}\n")
     file.write(f"Class: {character['class']}\n")
@@ -93,30 +99,30 @@ def save_character(character, filename):
     return True
 
 
-
+# Function to load a character from a text file
 def load_character(filename):
     """
     Loads character from text file
     Returns: character dictionary if successful, None if file not found
     (No try/except used)
     """
-    # Check if file exists using manual logic
     import os
     if not os.path.exists(filename):
-        return None
+        return None  # File does not exist
 
+    # Read all lines from the file
     file = open(filename, "r")
     lines = file.readlines()
     file.close()
 
-    # Parse file lines
+    # Parse file lines into key/value pairs
     data = {}
     for line in lines:
         if ":" in line:
             key, value = line.strip().split(": ", 1)
             data[key] = value
 
-    # Convert to proper types
+    # Convert string values to proper types and return character dictionary
     character = {
         "name": data.get("Character Name", ""),
         "class": data.get("Class", ""),
@@ -130,6 +136,7 @@ def load_character(filename):
     return character
 
 
+# Function to display a character sheet
 def display_character(character):
     """
     Prints formatted character sheet
@@ -144,20 +151,23 @@ def display_character(character):
     print(f"Gold: {character['gold']}")
 
 
+# Function to level up a character and recalculate stats
 def level_up(character):
     """
     Increases character level and recalculates stats
     """
-    character["level"] += 1
+    character["level"] += 1  # Increment level by 1
     strength, magic, health = calculate_stats(character["class"], character["level"])
     character["strength"] = strength
     character["magic"] = magic
     character["health"] = health
 
 
-# Main program area (optional testing)
+# Main program area for testing
 if __name__ == "__main__":
     print("=== CHARACTER CREATOR ===")
+    
+    # Create a sample character
     char = create_character("Aria", "Mage")
     display_character(char)
 
